@@ -15,24 +15,40 @@ def readData():
 
 df = readData()
 
-trace1 = go.Bar(x=pv.index, y=pv[('Quantity', 'declined')], name='Declined')
-trace2 = go.Bar(x=pv.index, y=pv[('Quantity', 'pending')], name='Pending')
-trace3 = go.Bar(x=pv.index, y=pv[('Quantity', 'presented')], name='Presented')
-trace4 = go.Bar(x=pv.index, y=pv[('Quantity', 'won')], name='Won')
 
 app.layout = html.Div(children=[
     html.H1(children='IBM HR EDA Dashbord'),
     dcc.Graph(
-    id='example',    
-    figure={
-        'data': [
-            {'x': df.JobSatisfaction, 'y': df.Attrition, 'type': 'bar', 'name': 'JobSatisfaction', 'barmode':'group'},
-        ],
-        'layout': {
-            'title': 'Job Satisfaction vs Attrition'
-        }
-    }
-)
+        figure=go.Figure(
+        data=[
+
+        go.Bar(
+            x=list(df.month.unique()),
+            y=df.loc[df['location'] == 'Brn'].Talks,
+            name='Brn',
+            marker=go.bar.Marker(
+                color='#da202a',
+            )
+        ),
+
+        go.Bar(
+            x=list(df.month.unique()),
+            y=df.loc[df['location'] == 'Wrl'].Talks,
+            name='Wrl',
+            marker=go.bar.Marker(
+                color='#2a2a2d',
+            )
+        ),
+
+        layout=go.Layout(
+        title='Conversation Required',
+        showlegend=True,
+        barmode='stack',
+        xaxis = dict(tickvals=df.month.unique())
+      )
+            )
+    
+
 ])
 
 if __name__ == '__main__':
